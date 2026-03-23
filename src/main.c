@@ -51,7 +51,26 @@ static int get_mac_address(char *mac_str, size_t size) {
     memset(&ifr, 0, sizeof(ifr));
 
     /* Try common interface names */
-    const char *ifaces[] = {"eth0", "wlan0", "ra0", "br-lan", NULL};
+    const char *ifaces[] = {
+        "eth0",
+        "eth1",
+        "wlan0",
+        "wlan1",
+        "ra0",
+        "br-lan",
+        "enp0s3",
+        "enp1s0",
+        "enp2s0",
+        "enp3s0",
+        "enp4s0",
+        "enp5s0",
+        "enp6s0",
+        "wlp0s0",
+        "wlp1s0",
+        "wlp2s0",
+        "wlp3s0",
+        NULL
+    };
 
     for (int i = 0; ifaces[i] != NULL; i++) {
         strncpy(ifr.ifr_name, ifaces[i], IFNAMSIZ - 1);

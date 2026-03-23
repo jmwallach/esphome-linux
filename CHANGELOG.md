@@ -343,3 +343,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - N/A
 
 [0.0.14]: https://github.com/yinzara/esphome-linux/releases/tag/v0.0.14
+
+[0.0.15] - 2026-01-06
+
+### Added
+- N/A
+
+### Changed
+- MAC detection on modern Linux systems uses predictable modern network interface names (e.g. enp*, wlp*) in addition to existing legacy names (eth*, wlan*)
+
+### Deprecated
+- N/A
+
+### Removed
+- N/A
+
+### Fixed
+- N/A
+
+### Security
+- N/A
+
+[0.0.15]: https://github.com/yinzara/esphome-linux/releases/tag/v0.0.15

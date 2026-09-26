@@ -350,7 +350,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - N/A
 
 ### Changed
-- MAC detection on modern Linux systems uses predictable modern network interface names (e.g. enp*, wlp*) in addition to existing legacy names (eth*, wlan*)
+- MAC detection now enumerates all available network interfaces instead of matching against a fixed list of names, so it works with any interface naming scheme (legacy `eth*`/`wlan*`, predictable `enp*`/`wlp*`, `enx*`, USB NICs, etc.)
 
 ### Deprecated
 - N/A

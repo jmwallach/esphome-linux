@@ -42,50 +42,43 @@ static void signal_handler(int sig) {
  * Get the MAC address of the primary network interface
  */
 static int get_mac_address(char *mac_str, size_t size) {
-    int fd = socket(AF_INET, SOCK_DGRAM, 0);
-    if (fd < 0) {
+    struct if_nameindex *if_list = if_nameindex();
+    if (!if_list) {
         return -1;
     }
 
-    struct ifreq ifr;
-    memset(&ifr, 0, sizeof(ifr));
+    int fd = socket(AF_INET, SOCK_DGRAM, 0);
+    if (fd < 0) {
+        if_freenameindex(if_list);
+        return -1;
+    }
 
-    /* Try common interface names */
-    const char *ifaces[] = {
-        "eth0",
-        "eth1",
-        "wlan0",
-        "wlan1",
-        "ra0",
-        "br-lan",
-        "enp0s3",
-        "enp1s0",
-        "enp2s0",
-        "enp3s0",
-        "enp4s0",
-        "enp5s0",
-        "enp6s0",
-        "wlp0s0",
-        "wlp1s0",
-        "wlp2s0",
-        "wlp3s0",
-        NULL
-    };
+    int result = -1;
+    for (int i = 0; if_list[i].if_name != NULL; i++) {
+        /* Skip loopback; it never carries a usable hardware MAC */
+        if (strcmp(if_list[i].if_name, "lo") == 0) {
+            continue;
+        }
 
-    for (int i = 0; ifaces[i] != NULL; i++) {
-        strncpy(ifr.ifr_name, ifaces[i], IFNAMSIZ - 1);
+        struct ifreq ifr;
+        memset(&ifr, 0, sizeof(ifr));
+        strncpy(ifr.ifr_name, if_list[i].if_name, IFNAMSIZ - 1);
 
         if (ioctl(fd, SIOCGIFHWADDR, &ifr) == 0) {
             unsigned char *mac = (unsigned char *)ifr.ifr_hwaddr.sa_data;
-            snprintf(mac_str, size, "%02X:%02X:%02X:%02X:%02X:%02X",
-                    mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
-            close(fd);
-            return 0;
+            /* Skip all-zero MACs reported by some virtual interfaces */
+            if (mac[0] || mac[1] || mac[2] || mac[3] || mac[4] || mac[5]) {
+                snprintf(mac_str, size, "%02X:%02X:%02X:%02X:%02X:%02X",
+                        mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
+                result = 0;
+                break;
+            }
         }
     }
 
     close(fd);
-    return -1;
+    if_freenameindex(if_list);
+    return result;
 }
 
 /**

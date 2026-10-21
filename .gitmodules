@@ -4,3 +4,6 @@
 [submodule "bluez"]
 	path = bluez
 	url = https://github.com/bluez/bluez
+[submodule "atbm-wifi"]
+	path = atbm-wifi
+	url = https://github.com/gtxaspec/atbm-wifi

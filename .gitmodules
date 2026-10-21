@@ -1,3 +1,6 @@
 [submodule "libblepp"]
 	path = libblepp
 	url = https://github.com/edrosten/libblepp
+[submodule "bluez"]
+	path = bluez
+	url = https://github.com/bluez/bluez
